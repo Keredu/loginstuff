@@ -14,6 +14,7 @@ document.getElementById('submitRegister').addEventListener('click', function() {
     const name = document.getElementById('registerName').value;
     const password = document.getElementById('registerPassword').value;
 
+    document.getElementById('registerForm').style.display = 'none';
     fetch('/register', {
         method: 'POST',
         headers: {
@@ -35,6 +36,7 @@ document.getElementById('submitLogin').addEventListener('click', function() {
     const name = document.getElementById('loginName').value;
     const password = document.getElementById('loginPassword').value;
 
+    document.getElementById('loginForm').style.display = 'none';
     fetch('/login', {
         method: 'POST',
         headers: {
@@ -45,7 +47,7 @@ document.getElementById('submitLogin').addEventListener('click', function() {
     .then(response => response.json())
     .then(data => {
         alert(data.message);
-    })
+        })
     .catch(error => {
         console.error('Error:', error);
     });
