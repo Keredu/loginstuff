@@ -29,18 +29,19 @@ document.getElementById('submitRegister').addEventListener('click', function() {
     const username = document.getElementById('registerUsername').value;
     const password = document.getElementById('registerPassword').value;
 
-    resetView().then(() => 
-        fetch('/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ username, password })
-        })
-    )
+    fetch('/register', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ username, password })
+    })
     .then(response => response.json())
     .then(data => {
-        alert(data.message);
+        resetView();  // Call resetView without Promise
+        setTimeout(() => {
+            alert(data.message);
+        }, 100); // Adjust the delay as needed to ensure UI renders
     })
     .catch(error => {
         console.error('Error:', error);
@@ -52,18 +53,19 @@ document.getElementById('submitLogin').addEventListener('click', function() {
     const username = document.getElementById('loginUsername').value;
     const password = document.getElementById('loginPassword').value;
     
-    resetView().then(() => 
-        fetch('/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ username, password })
-        })
-    )
+    fetch('/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ username, password })
+    })
     .then(response => response.json())
     .then(data => {
-        alert(data.message);
+        resetView();  // Call resetView without Promise
+        setTimeout(() => {
+            alert(data.message);
+        }, 100); // Adjust the delay as needed to ensure UI renders
     })
     .catch(error => {
         console.error('Error:', error);
@@ -96,13 +98,9 @@ document.getElementById('registerPassword').addEventListener('keydown', function
 });
 
 function resetView() {
-    return new Promise((resolve) => {
-        document.getElementById('formHeading').innerText = '';
-        document.getElementById('loginButton').style.display = 'block';
-        document.getElementById('registerButton').style.display = 'block';
-        document.getElementById('loginForm').style.display = 'none';
-        document.getElementById('registerForm').style.display = 'none';
-
-        resolve();
-    });
+    document.getElementById('formHeading').innerText = '';
+    document.getElementById('loginButton').style.display = 'block';
+    document.getElementById('registerButton').style.display = 'block';
+    document.getElementById('loginForm').style.display = 'none';
+    document.getElementById('registerForm').style.display = 'none';
 }
