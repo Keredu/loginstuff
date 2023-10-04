@@ -11,16 +11,20 @@
 <button id="loginButton">Login</button>
 <button id="registerButton">Register</button>
 
-<div id="loginForm" style="display: none;">
-    <input type="text" id="loginUsername" placeholder="Username">
-    <input type="password" id="loginPassword" placeholder="Password">
-    <button id="submitLogin">Submit</button>
-</div>
+<div id="formContainer">
+    <h1 id="formHeading"></h1>
 
-<div id="registerForm" style="display: none;">
-    <input type="text" id="registerUsername" placeholder="Username">
-    <input type="password" id="registerPassword" placeholder="Password">
-    <button id="submitRegister">Submit</button>
+    <div id="loginForm" style="display: none;">
+        <input type="text" id="loginUsername" placeholder="Username">
+        <input type="password" id="loginPassword" placeholder="Password">
+        <button id="submitLogin">Submit</button>
+    </div>
+
+    <div id="registerForm" style="display: none;">
+        <input type="text" id="registerUsername" placeholder="Username">
+        <input type="password" id="registerPassword" placeholder="Password">
+        <button id="submitRegister">Submit</button>
+    </div>
 </div>
 
 <script src="script.js"></script>
