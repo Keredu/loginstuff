@@ -38,10 +38,16 @@ document.getElementById('submitRegister').addEventListener('click', function() {
     })
     .then(response => response.json())
     .then(data => {
-        resetView();  // Call resetView without Promise
-        setTimeout(() => {
-            alert(data.message);
-        }, 100); // Adjust the delay as needed to ensure UI renders
+        if (data.error) {
+            document.getElementById('registerUsername').value = ''; 
+            document.getElementById('registerPassword').value = '';  // Clear password field
+            alert(data.error);
+        } else {        
+            resetView();  // Call resetView without Promise
+            setTimeout(() => {
+                alert(data.message);
+            }, 100); // Adjust the delay as needed to ensure UI renders
+        }
     })
     .catch(error => {
         console.error('Error:', error);
@@ -62,10 +68,16 @@ document.getElementById('submitLogin').addEventListener('click', function() {
     })
     .then(response => response.json())
     .then(data => {
-        resetView();  // Call resetView without Promise
-        setTimeout(() => {
-            alert(data.message);
-        }, 100); // Adjust the delay as needed to ensure UI renders
+        if (data.error) {
+            document.getElementById('loginUsername').value = '';
+            document.getElementById('loginPassword').value = '';  // Clear password field
+            alert(data.error);
+        } else {        
+            resetView();  // Call resetView without Promise
+            setTimeout(() => {
+                alert(data.message);
+            }, 100); // Adjust the delay as needed to ensure UI renders
+        }
     })
     .catch(error => {
         console.error('Error:', error);

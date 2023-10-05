@@ -47,20 +47,51 @@ async function getUserByName(db, name) {
     });
 }
 
+
+
+function checkRegisterUsername(username) {
+    let errors = [];
+    if (username.length < 3) {
+        errors.push('Username should be at least 3 characters long.');
+    }
+    if (!/^[a-zA-Z0-9]+$/.test(username)) {
+        errors.push('Username should contain only letters and numbers.');
+    }
+    return errors.join('\n');
+}
+
+function checkRegisterPassword(password) {
+    let errors = [];
+
+    if (password.length < 8) {
+        errors.push('Password should be at least 8 characters long.');
+    }
+    if (!/[a-zA-Z]/.test(password)) {
+        errors.push('Password should contain at least one letter.');
+    }
+    if (!/\d/.test(password)) {
+        errors.push('Password should contain at least one number.');
+    }
+    if (!/[@$!%*?&#.]/.test(password)) {
+        errors.push('Password should contain at least one of the special characters @$!%*?&#.');
+    }
+    
+    return errors.join('\n');
+}
+
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
-
+    
+    if (!password) {
+        return res.status(400).json({ error: "Password field cannot be empty."}); // Use 400 Bad Request
+    }
+    
     try {
         const user = await getUserByName(db, username);
-        if (!user) {
-            return res.status(400).json({ message: "User not found." });
-        }
-
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (isMatch) {
+        if (user ? await bcrypt.compare(password, user.password) : false) {
             return res.json({ message: "Logged in!" });
         } else {
-            return res.status(400).json({ message: "Invalid password." });
+            return res.status(400).json({ error: "Invalid username/password." });
         }
 
     } catch (err) {
@@ -70,7 +101,14 @@ app.post('/login', async (req, res) => {
 
 app.post('/register', async (req, res) => {
     const { username, password } = req.body;
-
+    
+    usernameErrorMessage = checkRegisterUsername(username);
+    passwordErrorMessage = checkRegisterPassword(password);
+    errorMessage = [usernameErrorMessage, passwordErrorMessage].filter(msg => msg !== '').join('\n');
+    if (errorMessage) {
+        return res.status(400).json({ error: errorMessage}); // Use 400 Bad Request
+    }
+    
     try {
         await addUser(db, username, password);
         return res.json({ message: "User registered successfully!" });
