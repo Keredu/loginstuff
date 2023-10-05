@@ -1,11 +1,27 @@
 document.getElementById('loginButton').addEventListener('click', function() {
+    document.getElementById('formHeading').innerText = 'Login to your account';
+    // Hide register form and show login form
     document.getElementById('loginForm').style.display = 'block';
     document.getElementById('registerForm').style.display = 'none';
+    // Reset the input fields
+    document.getElementById('loginUsername').value = '';
+    document.getElementById('loginPassword').value = '';    
+    // Hide both buttons
+    document.getElementById('loginButton').style.display = 'none';
+    document.getElementById('registerButton').style.display = 'none';
 });
 
 document.getElementById('registerButton').addEventListener('click', function() {
+    document.getElementById('formHeading').innerText = 'Register a new account';
+    // Hide login form and show register form
     document.getElementById('loginForm').style.display = 'none';
     document.getElementById('registerForm').style.display = 'block';
+    // Reset the input fields
+    document.getElementById('registerUsername').value = '';
+    document.getElementById('registerPassword').value = '';
+    // Hide both buttons
+    document.getElementById('loginButton').style.display = 'none';
+    document.getElementById('registerButton').style.display = 'none';
 });
 
 // For registration
@@ -13,7 +29,6 @@ document.getElementById('submitRegister').addEventListener('click', function() {
     const username = document.getElementById('registerUsername').value;
     const password = document.getElementById('registerPassword').value;
 
-    document.getElementById('registerForm').style.display = 'none';
     fetch('/register', {
         method: 'POST',
         headers: {
@@ -23,7 +38,16 @@ document.getElementById('submitRegister').addEventListener('click', function() {
     })
     .then(response => response.json())
     .then(data => {
-        alert(data.message);
+        if (data.error) {
+            document.getElementById('registerUsername').value = ''; 
+            document.getElementById('registerPassword').value = '';  // Clear password field
+            alert(data.error);
+        } else {        
+            resetView();  // Call resetView without Promise
+            setTimeout(() => {
+                alert(data.message);
+            }, 100); // Adjust the delay as needed to ensure UI renders
+        }
     })
     .catch(error => {
         console.error('Error:', error);
@@ -34,8 +58,7 @@ document.getElementById('submitRegister').addEventListener('click', function() {
 document.getElementById('submitLogin').addEventListener('click', function() {
     const username = document.getElementById('loginUsername').value;
     const password = document.getElementById('loginPassword').value;
-
-    document.getElementById('loginForm').style.display = 'none';
+    
     fetch('/login', {
         method: 'POST',
         headers: {
@@ -45,7 +68,16 @@ document.getElementById('submitLogin').addEventListener('click', function() {
     })
     .then(response => response.json())
     .then(data => {
-        alert(data.message);
+        if (data.error) {
+            document.getElementById('loginUsername').value = '';
+            document.getElementById('loginPassword').value = '';  // Clear password field
+            alert(data.error);
+        } else {        
+            resetView();  // Call resetView without Promise
+            setTimeout(() => {
+                alert(data.message);
+            }, 100); // Adjust the delay as needed to ensure UI renders
+        }
     })
     .catch(error => {
         console.error('Error:', error);
@@ -76,3 +108,11 @@ document.getElementById('registerPassword').addEventListener('keydown', function
         document.getElementById('submitRegister').click();
     }
 });
+
+function resetView() {
+    document.getElementById('formHeading').innerText = '';
+    document.getElementById('loginButton').style.display = 'block';
+    document.getElementById('registerButton').style.display = 'block';
+    document.getElementById('loginForm').style.display = 'none';
+    document.getElementById('registerForm').style.display = 'none';
+}
