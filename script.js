@@ -39,7 +39,7 @@ document.getElementById('submitRegister').addEventListener('click', function() {
     .then(response => response.json())
     .then(data => {
         if (data.error) {
-            document.getElementById('registerUsername').value = ''; 
+            // document.getElementById('registerUsername').value = ''; 
             document.getElementById('registerPassword').value = '';  // Clear password field
             alert(data.error);
         } else {        
