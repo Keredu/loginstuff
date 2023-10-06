@@ -64,8 +64,11 @@ function checkRegisterPassword(password) {
     if (password.length < 8) {
         errors.push('Password should be at least 8 characters long.');
     }
-    if (!/[a-zA-Z]/.test(password)) {
-        errors.push('Password should contain at least one letter.');
+    if (!/[a-z]/.test(password)) {
+        errors.push('Password should contain at least one lowercase letter.');
+    }
+    if (!/[A-Z]/.test(password)) {
+        errors.push('Password should contain at least one uppercase letter.');
     }
     if (!/\d/.test(password)) {
         errors.push('Password should contain at least one number.');
