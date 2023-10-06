@@ -83,26 +83,32 @@ function checkRegisterPassword(password) {
 app.post('/register', async (req, res) => {
     const { username, password } = req.body;
     
-    usernameErrorMessage = checkRegisterUsername(username);
-    if (!usernameErrorMessage) {
-        const user = await getUserByName(db, username);
-        if (user) {
-            return res.status(400).json({ error: "Username already exists." });
+    let errors = {};
+    
+    const usernameError = checkRegisterUsername(username);
+    if (usernameError) {
+        errors.username = usernameError;
+    } else {
+        const existingUser = await getUserByName(db, username);
+        if (existingUser) {
+            errors.username = "Username already exists.";
         }
     }
-    passwordErrorMessage = checkRegisterPassword(password);
-    errorMessage = [usernameErrorMessage, passwordErrorMessage].filter(msg => msg !== '').join('\n');
-    if (errorMessage) {
-        return res.status(400).json({ error: errorMessage}); // Use 400 Bad Request
-    }
     
+    const passwordError = checkRegisterPassword(password);
+    if (passwordError) {
+        errors.password = passwordError;
+    }
 
+    if (Object.keys(errors).length) {
+        return res.status(400).json({ error: errors }); // return the structured error
+    }
     
     try {
         await addUser(db, username, password);
         return res.json({ message: "User registered successfully!" });
     } catch (err) {
-        return res.status(500).json({ error: err.message });
+        return res.status(500).json({ error: { general: err.message } });
     }
 });
 
@@ -126,10 +132,18 @@ app.post('/login', async (req, res) => {
     }
 });
 
-db.run("CREATE TABLE IF NOT EXISTS user (username TEXT, password TEXT)", [], (err) => {
+db.run("CREATE TABLE IF NOT EXISTS user (username TEXT, password TEXT)", [], async (err) => {
     if (err) {
         console.error("Failed to create table: ", err.message);
     } else {
+        // Add user "paco" with password "1Pacopepe" after table creation
+        try {
+            await addUser(db, 'paco', '1Pacopepe');
+            console.log('User "paco" added with password "1Pacopepe"');
+        } catch (addUserError) {
+            console.error('Failed to add user "paco":', addUserError.message);
+        }
+
         const PORT = 3000;
         app.listen(PORT, () => {
             console.log(`Server is running on http://localhost:${PORT}`);

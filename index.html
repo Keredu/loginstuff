@@ -13,16 +13,19 @@
 
 <div id="formContainer">
     <h1 id="formHeading"></h1>
-
+    <!-- Login Form -->
     <div id="loginForm" style="display: none;">
         <input type="text" id="loginUsername" placeholder="Username">
         <input type="password" id="loginPassword" placeholder="Password">
+        <div id="loginError" class="errorMessage"></div>
         <button id="submitLogin">Submit</button>
     </div>
-
+    <!-- Register Form --> 
     <div id="registerForm" style="display: none;">
         <input type="text" id="registerUsername" placeholder="Username">
+        <div id="registerUsernameError" class="errorMessage"></div>
         <input type="password" id="registerPassword" placeholder="Password">
+        <div id="registerPasswordError" class="errorMessage"></div>
         <button id="submitRegister">Submit</button>
     </div>
 </div>

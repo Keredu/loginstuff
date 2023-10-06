@@ -39,14 +39,17 @@ document.getElementById('submitRegister').addEventListener('click', function() {
     .then(response => response.json())
     .then(data => {
         if (data.error) {
-            // document.getElementById('registerUsername').value = ''; 
-            document.getElementById('registerPassword').value = '';  // Clear password field
-            alert(data.error);
-        } else {        
-            resetView();  // Call resetView without Promise
+            if (data.error.username) {
+                document.getElementById('registerUsernameError').innerText = data.error.username;
+            }
+            if (data.error.password) {
+                document.getElementById('registerPasswordError').innerText = data.error.password;
+            }
+        } else {
+            resetView();
             setTimeout(() => {
                 alert(data.message);
-            }, 100); // Adjust the delay as needed to ensure UI renders
+            }, 100);
         }
     })
     .catch(error => {
@@ -69,14 +72,13 @@ document.getElementById('submitLogin').addEventListener('click', function() {
     .then(response => response.json())
     .then(data => {
         if (data.error) {
-            document.getElementById('loginUsername').value = '';
+            document.getElementById('loginError').innerText = data.error;
             document.getElementById('loginPassword').value = '';  // Clear password field
-            alert(data.error);
         } else {        
-            resetView();  // Call resetView without Promise
+            resetView();
             setTimeout(() => {
                 alert(data.message);
-            }, 100); // Adjust the delay as needed to ensure UI renders
+            }, 100);
         }
     })
     .catch(error => {
